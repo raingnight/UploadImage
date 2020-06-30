@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<input type="file" id="imgurl" capture="camera" accept="image/png,image/gif,image/jpeg" />请选择文件
+		<input type="button" value="submit" />
+	</body>
+	   <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+	<script>
+		var result;
+		$('input[type=file]').on(
+			'change',
+			function() {
+				var reader = new FileReader();
+				reader.onload = function(e) {
+					// alert(reader.result); //或者 e.target.result都是一样的，都是base64码
+					result = reader.result;
+				}
+				reader.readAsDataURL(this.files[0])
+				//filses就是input[type=file]文件列表，files[0]就是第一个文件，这里就是将选择的第一个图片文件转化为base64的码
+			}
+		);
+		$('input[type=button]').click(function() {
+			console.log(result);
+			 var data = "content="+result;
+			$.ajax({
+				type: "post",
+				url: "UploadServlet",
+				data: data,
+				success: function(msg) {
+					console.log(msg);
+				}
+			});
+		});
+	</script>
+</html>
